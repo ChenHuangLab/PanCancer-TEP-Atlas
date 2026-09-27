@@ -1,0 +1,10 @@
+torch>=2.2
+numpy
+pandas
+h5py
+scikit-learn
+scipy
+opencv-python
+openslide-python
+matplotlib
+tqdm
