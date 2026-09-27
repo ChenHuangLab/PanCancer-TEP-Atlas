@@ -7,7 +7,8 @@ if (length(script_arg) != 1L) stop("Run this file with Rscript.")
 script_dir <- dirname(normalizePath(sub("^--file=", "", script_arg), mustWork = TRUE))
 args <- commandArgs(trailingOnly = TRUE)
 allowed <- c("--input-dir", "--output-dir", "--gene-map", "--cluster-map")
-if (length(args) %% 2L || any(!args[seq(1L, length(args), by = 2L)] %in% allowed)) {
+if (length(args) %% 2L ||
+    (length(args) > 0L && any(!args[seq(1L, length(args), by = 2L)] %in% allowed))) {
   stop("Usage: Rscript HSC_Megakaryocyte_Platelet_altas_integration.R ",
        "[--input-dir PATH] [--output-dir PATH] [--gene-map PATH] ",
        "[--cluster-map PATH]")
@@ -69,7 +70,9 @@ gene_map <- utils::read.csv(gene_map_path, header = FALSE, stringsAsFactors = FA
 if (ncol(gene_map) < 3L) stop("Gene map needs original_id, entrezgene, symbol columns.")
 gene_map <- gene_map[, 1:3]
 names(gene_map) <- c("original_id", "entrezgene", "symbol")
-if (nrow(gene_map) && gene_map$original_id[1] == "original_id") gene_map <- gene_map[-1L, ]
+if (nrow(gene_map) > 0L && identical(gene_map$original_id[1], "original_id")) {
+  gene_map <- gene_map[-1L, ]
+}
 gene_map$original_id <- trimws(gene_map$original_id)
 gene_map$symbol <- trimws(gene_map$symbol)
 gene_map <- gene_map[!is.na(gene_map$original_id) & nzchar(gene_map$original_id) &
