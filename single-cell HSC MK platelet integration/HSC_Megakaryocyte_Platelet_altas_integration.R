@@ -56,6 +56,11 @@ if (sum(startsWith(SeuratObject::Layers(combined[["RNA"]]), "counts")) > 1L) {
 }
 counts <- SeuratObject::LayerData(combined, assay = "RNA", layer = "counts")
 if (!inherits(counts, "sparseMatrix")) counts <- methods::as(counts, "dgCMatrix")
+# Apply the manuscript's UMI threshold to raw counts before gene mapping.
+cells_250 <- colnames(counts)[Matrix::colSums(counts) >= 250]
+if (!length(cells_250)) stop("No cells satisfy the 250 raw UMI threshold.")
+combined <- subset(combined, cells = cells_250)
+counts <- counts[, cells_250, drop = FALSE]
 
 # The mapping table is produced by the upstream MyGene.info annotation step.
 # Like the source script, it determines which original gene IDs are retained.
@@ -111,9 +116,6 @@ if (anyNA(meta$sample_id) || any(!nzchar(as.character(meta$sample_id)))) {
   stop("sample_id must be defined for every cell.")
 }
 combined$integration_batch <- paste(meta$cancer_type, meta$sample_id, sep = "::")
-cells_250 <- colnames(combined)[combined$nCount_RNA >= 250]
-if (!length(cells_250)) stop("No cells satisfy the 250 UMI threshold.")
-combined <- subset(combined, cells = cells_250)
 sample_sizes <- table(combined$integration_batch)
 retained_samples <- names(sample_sizes[sample_sizes >= 10L])
 if (!length(retained_samples)) stop("No sample has at least 10 cells after UMI filtering.")
