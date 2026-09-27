@@ -97,6 +97,9 @@ if (anyDuplicated(symbols)) {
 }
 rownames(counts) <- symbol_levels
 if (anyDuplicated(rownames(counts))) stop("Duplicate gene symbols remain.")
+# Retain the source workflow's final exclusion of dotted feature names.
+counts <- counts[!grepl("\\.", rownames(counts)), , drop = FALSE]
+if (!nrow(counts)) stop("No genes remain after excluding dotted feature names.")
 message("Retained ", nrow(counts), " mapped genes and ", ncol(counts), " cells.")
 
 unmapped_path <- file.path(input_dir, "unmapped_genes.csv")

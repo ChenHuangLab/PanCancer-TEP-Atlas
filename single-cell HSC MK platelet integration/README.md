@@ -22,7 +22,7 @@ single-cell HSC MK platelet integration/
     └── cluster_celltype_map.csv        # optional reviewed annotations
 ```
 
-`mapped_genes.csv` is the upstream MyGene.info table, with columns `original_id,entrezgene,symbol` (the original headerless export also works). The script retains IDs present in this table, maps Ensembl IDs to gene symbols, and sums duplicate symbols in a sparse matrix. `unmapped_genes.csv` is an optional one-column list used to report the fraction of raw UMIs from unmapped genes. The upstream CELLxGENE/GEO download, Table S1 sample metadata, and creation of these mapping files are outside this script.
+`mapped_genes.csv` is the upstream MyGene.info table, with columns `original_id,entrezgene,symbol` (the original headerless export also works). The script retains IDs present in this table, maps Ensembl IDs to gene symbols, sums duplicate symbols in a sparse matrix, and excludes dotted feature names as in the source workflow. `unmapped_genes.csv` is an optional one-column list used to report the fraction of raw UMIs from unmapped genes. The upstream CELLxGENE/GEO download, Table S1 sample metadata, and creation of these mapping files are outside this script.
 
 `in-slico_FACS.R` is the separately released upstream cell-selection script, implementing the manuscript's MK/platelet and HSC marker rules. The new integration entry point reads `first_qc_cleaned.rds` from the six groups and does **not** call FACS itself. It checks the 250-UMI threshold and removes samples with fewer than 10 retained cells.
 
