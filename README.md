@@ -9,4 +9,4 @@ Analysis code accompanying the PanCancer-Platelet-Atlas study, including target-
 
 ## Data availability
 
-The processed clustered platelet Seurat object (`clustered_Platelet_with_pathway_score.rds`) has been deposited in Harvard Dataverse and submitted for review (reserved DOI: 10.7910/DVN/HVN3IO). The larger Harmony-integrated RDS object is not part of this deposit.
+The processed clustered platelet Seurat object (`clustered_Platelet_with_pathway_score.rds`) is publicly available in Harvard Dataverse (DOI: [10.7910/DVN/HVN3IO](https://doi.org/10.7910/DVN/HVN3IO), version 1.0). The larger Harmony-integrated RDS object is not part of this deposit.
