@@ -1,8 +1,10 @@
 # HSC, megakaryocyte and platelet single-cell integration
 
-`HSC_Megakaryocyte_Platelet_altas_integration.R` is the author's original `2026_07_05_single_cell_atlas_construction.R`, uploaded without changes to its contents. The repository filename is retained to preserve existing links. The earlier adapted integration script has been replaced.
+`HSC_Megakaryocyte_Platelet_altas_integration.R` uses the author's latest `2026_07_05_single_cell_atlas_construction.R`. Chinese comments have been translated into concise English; executable code, strings, paths and parameters are unchanged. The repository filename is retained to preserve existing links.
 
-Source-file SHA-256: `e353eba6c91d8dfc6d48141f4e42ad0b89b24f980845bab71e9e9a47461e9c85`.
+Local source SHA-256: `9c3c0463b85d272ceb834988c233522e490a6c5b22aa4aa660539ad9d567bda2`.
+
+Released script SHA-256: `00b8312985b0d823c68af2e9763aa4b81fc0ac74d06d13652d2ec1716f9acc05`.
 
 ## Inputs and paths
 
@@ -34,6 +36,6 @@ The original manual cluster-label block is preserved as supplied. It includes ov
 
 Install the packages loaded or called by the original script, including Seurat 5, Matrix, Matrix.utils, data.table, R.matlab, tidyverse, biomaRt, stringr, future, future.apply and harmony. Use the original analysis package versions and inputs when reproducing the atlas.
 
-The uploaded file was checked against the supplied local source using SHA-256 and parsed with R 4.6.0. It has not been validated by a complete integration run; the upstream inputs and required packages were unavailable in the preparation environment. Syntax parsing does not check the runtime behavior of the original manual annotation block.
+The uploaded file was parsed with R 4.6.0, and its parsed expressions were checked for exact equality with the latest supplied source, confirming that only comments changed. It has not been validated by a complete integration run; the upstream inputs and required packages were unavailable in the preparation environment. Syntax parsing does not check the runtime behavior of the original manual annotation block.
 
 The deposited processed platelet object with pathway scores is described in the [repository data availability statement](../README.md#data-availability). The larger Harmony-integrated object is not included in that deposit.
