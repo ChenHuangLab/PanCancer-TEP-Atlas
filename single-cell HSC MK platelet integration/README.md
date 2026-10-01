@@ -1,59 +1,39 @@
 # HSC, megakaryocyte and platelet single-cell integration
 
-`HSC_Megakaryocyte_Platelet_altas_integration.R` is a cleaned publication copy of `2026_07_05_single_cell_atlas_construction.R`. The previously published entry-point filename is retained so existing links keep working. The original local script was not changed.
+`HSC_Megakaryocyte_Platelet_altas_integration.R` is the author's original `2026_07_05_single_cell_atlas_construction.R`, uploaded without changes to its contents. The repository filename is retained to preserve existing links. The earlier adapted integration script has been replaced.
 
-## Input layout
+Source-file SHA-256: `e353eba6c91d8dfc6d48141f4e42ad0b89b24f980845bab71e9e9a47461e9c85`.
 
-The integration script starts from six **prepared** Seurat 5 objects. Each needs an RNA assay with raw counts and a `sample_id` metadata column. Place the inputs under `input/` next to the scripts:
+## Inputs and paths
+
+The original script uses the author's analysis-environment paths. Set `base_dir` and the output paths for your own environment before running it. The previous command-line options (`--input-dir`, `--output-dir`, `--gene-map`, `--cluster-map`) are not part of this original script.
+
+The input directory contains six prepared Seurat objects:
 
 ```text
-single-cell HSC MK platelet integration/
-├── HSC_Megakaryocyte_Platelet_altas_integration.R
-├── in-slico_FACS.R
-└── input/
-    ├── BloodCancer/first_qc_cleaned.rds
-    ├── Malignant Lymphoma/first_qc_cleaned.rds
-    ├── Multiple Myeloma/first_qc_cleaned.rds
-    ├── Osteosarcoma/first_qc_cleaned.rds
-    ├── other Cancer/first_qc_cleaned.rds
-    ├── other disease/first_qc_cleaned.rds
-    ├── mapped_genes.csv
-    ├── unmapped_genes.csv              # optional diagnostic input
-    └── cluster_celltype_map.csv        # optional reviewed annotations
+MK_dataset_supplementary/
+├── BloodCancer/first_qc_cleaned.rds
+├── Malignant Lymphoma/first_qc_cleaned.rds
+├── Multiple Myeloma/first_qc_cleaned.rds
+├── Osteosarcoma/first_qc_cleaned.rds
+├── other Cancer/first_qc_cleaned.rds
+└── other disease/first_qc_cleaned.rds
 ```
 
-`mapped_genes.csv` is the upstream MyGene.info table, with columns `original_id,entrezgene,symbol` (the original headerless export also works). The script retains IDs present in this table, maps Ensembl IDs to gene symbols, sums duplicate symbols in a sparse matrix, and excludes dotted feature names as in the source workflow. `unmapped_genes.csv` is an optional one-column list used to report the fraction of raw UMIs from unmapped genes. The upstream CELLxGENE/GEO download, Table S1 sample metadata, and creation of these mapping files are outside this script.
+The working directory also needs `mapped_genes.csv` (three headerless columns: original gene ID, Entrez ID and symbol) and `unmapped_genes.csv` (one headerless column). The input objects contain raw RNA counts and the sample/dataset metadata used in the script, including `sample_id`, `dataset_id`, `sample_source`, `disease`, `disease_state`, `tissue` and `marker_condition`.
 
-`in-slico_FACS.R` is the separately released upstream cell-selection script, implementing the manuscript's MK/platelet and HSC marker rules. The new integration entry point reads `first_qc_cleaned.rds` from the six groups and does **not** call FACS itself. It checks the 250-UMI threshold and removes samples with fewer than 10 retained cells.
+`in-slico_FACS.R` is the separately released upstream cell-selection script. The integration script starts from the prepared `first_qc_cleaned.rds` objects and does not call FACS itself.
 
-## Integration and optional annotations
+## Original analysis
 
-For each sample, the script finds 2,000 variable genes and selects 2,000 shared integration features. It then log-normalizes at `scale.factor = 1e4`, scales selected genes, computes 30 PCs, runs Harmony across source group and sample ID with `theta = 6` and `lambda = 1`, builds neighbors from Harmony components 1–30, clusters at `resolution = 0.1`, and computes UMAP. Source group is included in the batch key so matching sample IDs in different inputs remain distinct.
+The source merges the prepared objects, retains mapped genes, converts Ensembl IDs to symbols, aggregates duplicate symbols with Matrix.utils and excludes dotted gene names. Its effective cell filtering retains samples with at least 10 cells. It splits by `sample_id`, finds 2,000 HVGs per sample, selects integration features, normalizes, scales and runs PCA using the source defaults. Harmony uses `sample_id`, `theta = 6` and `lambda = 1`. Neighbors and the final UMAP use Harmony components 1–30; clustering uses `resolution = 0.1` and final UMAP uses `min.dist = 0.2`.
 
-The source script's manual cell-type assignments contain conflicting labels for clusters 18 and 19 and refer to clusters outside the initialized range. No cell-type labels are assigned by default. To add reviewed labels, supply `input/cluster_celltype_map.csv` with the columns below and one row for **every cluster observed in that run**:
+The original manual cluster-label block is preserved as supplied. It includes overlapping assignments for clusters 18 and 19, cluster IDs outside its initial 0–24 table, and trailing empty arguments in some `c()` calls; it needs author review before use. The previously described optional CSV annotation mechanism is not used by this original file. The source also overwrites its dataset-filtered object with a sample-filtered object and uses `save()` for one intermediate file with an `.rds` suffix; that intermediate is an RData file, not a `readRDS()` input.
 
-```csv
-ClusterID,celltype
-0,Megakaryocyte
-1,Hematopoietic stem cell
-```
+## Requirements and verification
 
-These two rows are **format examples only**, not validated labels. Without this file, `seurat_clusters` remains available and `celltype` is omitted.
+Install the packages loaded or called by the original script, including Seurat 5, Matrix, Matrix.utils, data.table, R.matlab, tidyverse, biomaRt, stringr, future, future.apply and harmony. Use the original analysis package versions and inputs when reproducing the atlas.
 
-## Run
+The uploaded file was checked against the supplied local source using SHA-256 and parsed with R 4.6.0. It has not been validated by a complete integration run; the upstream inputs and required packages were unavailable in the preparation environment. Syntax parsing does not check the runtime behavior of the original manual annotation block.
 
-Install Seurat 5, SeuratObject, Matrix, Harmony and their R dependencies:
-
-```sh
-Rscript HSC_Megakaryocyte_Platelet_altas_integration.R
-```
-
-Or supply another input/output location:
-
-```sh
-Rscript HSC_Megakaryocyte_Platelet_altas_integration.R --input-dir /path/to/input --output-dir /path/to/results
-```
-
-`--gene-map` and `--cluster-map` override the default mapping paths. The script writes `first_qc_final_harmony.rds`, `integration_features.csv`, `retained_cells_per_sample.csv`, and UMAP PDFs under `results/`. The Zenodo object named `first_qc_final_harmony_with_nuclear_score_and_MK_platelet_score.rds` includes additional downstream scores, so it is not the direct output of this script. Input RDS objects and results are ignored by Git.
-
-This publication copy was syntax-checked with R 4.6.0. A full integration run requires the six upstream RDS inputs and Seurat/Harmony packages, which were unavailable in the preparation environment.
+The deposited processed platelet object with pathway scores is described in the [repository data availability statement](../README.md#data-availability). The larger Harmony-integrated object is not included in that deposit.

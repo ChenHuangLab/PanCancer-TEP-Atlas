@@ -305,7 +305,7 @@ if __name__ == "__main__":
     parser.add_argument('--metadata-csv', required=True, help='CSV with slide_id, case_id, group and optional Patho/source/project')
     parser.add_argument('--luad-features', required=True, help='LUAD directory containing features_uni_v1/')
     parser.add_argument('--lusc-features', required=True, help='LUSC directory containing features_uni_v1/')
-    parser.add_argument('--checkpoint', type=Path, default=Path(__file__).with_name('full_model_epoch_78.pt'))
+    parser.add_argument('--checkpoint', type=Path, default=Path(__file__).with_name('full_model.pt'))
     parser.add_argument('--output-dir', type=Path, default=Path(__file__).with_name('results'))
     parser.add_argument('--luad-slides', help='Directory containing LUAD .svs files')
     parser.add_argument('--lusc-slides', help='Directory containing LUSC .svs files')

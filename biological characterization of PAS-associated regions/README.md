@@ -6,15 +6,15 @@ These scripts use a modified [AttriMIL](https://github.com/MedCAI/AttriMIL) mode
 
 | File | Role |
 | --- | --- |
-| `trainer_attrimil_nsclc_all_sample.py` | Load `full_model_epoch_78.pt`, rank class-specific AttriMIL attribute scores, export the top 100 level-0 coordinates per slide, and optionally make WSI heatmaps. Despite its historical filename, this script does not train a model. |
+| `trainer_attrimil_nsclc_all_sample.py` | Load `full_model.pt`, rank class-specific AttriMIL attribute scores, export the top 100 level-0 coordinates per slide, and optionally make WSI heatmaps. Despite its historical filename, this script does not train a model. |
 | `models/AttriMIL.py`, `dataloader.py` | Modified upstream model and H5 feature reader required by the mining script. |
 | `extract_all_patches_stratified.py` | Select slides within each PAS group using in-sample scores and extract their top five patches for downstream characterization. |
 | `stat_hovernet_result.py`, `morphology_calculation.py` | Summarize externally generated HoVer-Net PanNuke nuclei JSON files. |
 | `stat_histotme_result.py` | Match selected coordinates to externally generated HistoTME signatures, one cohort at a time. |
 | `stat_histotme_aligned.py` | Repeat HistoTME summary on the slides that also have HoVer-Net output. |
-| `full_model_epoch_78.pt` | Saved model weights supplied with this release. SHA-256: `48fe950922aff0305fb6c76e8d5043d924f9bde32937970892dd88d94f45c034`. |
+| `full_model.pt` | Saved model weights supplied with this release. SHA-256: `48fe950922aff0305fb6c76e8d5043d924f9bde32937970892dd88d94f45c034`. |
 
-The exact training script that produced `full_model_epoch_78.pt` was not available in the source material used to prepare this folder. The code here reproduces the **region-mining and biological characterization steps from that checkpoint**, not the initial training. No independent validation cohort is included.
+The exact training script that produced `full_model.pt` was not available in the source material used to prepare this folder. The code here reproduces the **region-mining and biological characterization steps from that checkpoint**, not the initial training. No independent validation cohort is included.
 
 ## Inputs
 
