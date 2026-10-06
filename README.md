@@ -11,5 +11,3 @@ Analysis code accompanying the PanCancer-Platelet-Atlas study, including target-
 
 The processed clustered platelet Seurat object (`clustered_Platelet_with_pathway_score.rds`) and the Harmony-integrated Seurat object (`first_qc_final_harmony_with_nuclear_score_and_MK_platelet_score.rds`) are publicly available in Figshare (DOI: [10.6084/m9.figshare.34077828](https://doi.org/10.6084/m9.figshare.34077828), version 1).
 
-The clustered platelet object is also available in Harvard Dataverse (DOI: [10.7910/DVN/HVN3IO](https://doi.org/10.7910/DVN/HVN3IO), version 1.0).
-
